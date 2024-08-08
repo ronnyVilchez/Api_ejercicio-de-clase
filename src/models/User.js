@@ -38,9 +38,9 @@ class User {
     return nuevoUsuario
   }
 
-  static async UpdateT({id, fName, mName, lName, username, email, password }) {
+  static async UpdateT({ id, fName, mName, lName, username, email, password }) {
     const campos = ['f_name=?', 'm_name=?', 'l_name=?', 'username=?', 'email=?', 'password=?']
-    const values = [fName, mName, lName, username, email, password,id]
+    const values = [fName, mName, lName, username, email, password, id]
 
     const camposString = campos.join(', ')
 
@@ -50,26 +50,49 @@ class User {
   }
 
 
-  /* static async updateParcial({ fName, mName, lName, username, email, password }) {
+  static async updateP({ id, fName, mName, lName, username, email, password }) {
+    const campos = []
+    const values = [id]
 
-
-    if (!name) {
-      return res.status(400).json({ message: 'Falta el nombre de la categoría en el formulario' })
+    if (fName) {
+      campos.push('f_name=?,')
+      values.unshift(fName)
+    }
+    if (mName) {
+      campos.push('m_name=?,')
+      values.unshift(mName)
+    }
+    if (lName) {
+      campos.push('l_name=?,')
+      values.unshift(lName)
+    }
+    if (username) {
+      campos.push('username=?,')
+      values.unshift(username)
+    }
+    if (email) {
+      campos.push('email=?,')
+      values.unshift(email)
+    }
+    if (password) {
+      campos.push('password=?,')
+      values.unshift(password)
     }
 
-    const [existingCategory] = await pool.execute('SELECT * FROM categories WHERE categoryid = ?', [id])
-    if (existingCategory.length === 0) {
-      return res.status(404).json({ message: 'Categoría no encontrada' })
-    }
+    const camposString = campos.join(' ').slice(0, -1)
 
-    const [result] = await pool.execute('UPDATE categories SET name = ? WHERE categoryid = ?', [name, id])
+    const usuarioActualizado = await pool.execute(`UPDATE users SET ${camposString} WHERE user_id=? `, values)
+    return usuarioActualizado
 
-    if (result.affectedRows !== 1) {
-      return res.status(500).json({ message: 'Hubo un error al actualizar la categoría' })
-    }
 
-    res.json({ message: 'Categoría actualizada' })
-  } */
+  }
+
+  static async delet({ id }) {
+
+    const usuario = await pool.execute(`DELETE FROM users WHERE user_id =?`, [id])
+    return usuario[0]
+  }
+
 }
 
 export default User

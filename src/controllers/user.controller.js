@@ -102,3 +102,47 @@ export const updateTotal = async (req, res) => {
   }
 }
 
+export const updateParcial = async(req,res) => {
+try {
+  const { fName, mName, lName, username, email, password } = req.body
+  const {id} = req.params
+
+  const usuarioActualizado= await User.updateP({
+    id,
+    fName,
+    mName,
+    lName,
+    username,
+    email,
+    password,
+  })
+
+  if (usuarioActualizado[0].affectedRows === 1) return res.json({ message: 'Usuario actualizado' })
+
+  res.status(500).json({ message: 'Error al actualizar el usuario' })
+
+} catch (error) {
+  res.status(500).json({ message: error.message })
+
+}
+
+}
+
+
+export const deleted = async(req,res) => {
+try {
+  const {id} = req.params
+
+  const usuarioEliminado = await User.delet({id})
+  if (usuarioEliminado.affectedRows === 1) return res.json({ message: 'Usuario eliminado' })
+  res.status(500).json({ message: 'Error al eliminar el usuario' })
+
+} catch (error) {
+  res.status(500).json({ message: error.message })
+
+}
+
+}
+
+
+
